@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IAnswerTimerDAO">
+    
+    <resultMap type="com.yijiajiao.finance.bean.AnswerTimer" id="resultAnswerTimer">
+        <id property="id" column="id" />
+        <result property="openId" column="open_id" />
+        <result property="teacherId" column="teacher_id"/>
+        <result property="remainTime" column="remain_time" />
+        <result property="updateTime" column="update_time" />
+        <result property= "gradeCode" column="grade_code"/>
+        <result property="createTime" column="create_time"/>
+        <result property="dueTime" column="expiry_date"/>
+    </resultMap>
+    
+    <select id="queryAnswerTimerByOpenId" parameterType="com.yijiajiao.finance.bean.AnswerTimer" resultMap="resultAnswerTimer">
+        select * from answer_timer where open_id=#{openId} and teacher_id=#{teacherId} and grade_code=#{gradeCode};
+    </select>
+    <insert id="saveAnswerTimer" parameterType="com.yijiajiao.finance.bean.AnswerTimer" useGeneratedKeys="true">
+    	insert into answer_timer(open_id,teacher_id,remain_time,update_time,create_time,grade_code,expiry_date) 
+    	values(#{openId},#{teacherId},#{remainTime},#{updateTime},#{createTime},#{gradeCode},#{dueTime});
+    </insert>
+	<update id="updateAnswerTimer" parameterType="com.yijiajiao.finance.bean.AnswerTimer">
+		update answer_timer set remain_time=#{remainTime},update_time=#{updateTime},expiry_date=#{dueTime} where id=#{id};
+	</update>
+	<select id="queryRemainTimes" parameterType="com.yijiajiao.finance.bean.AnswerTimer" resultMap="resultAnswerTimer">
+		select * from answer_timer where open_id=#{openId} and teacher_id=#{teacherId};
+	</select>
+	
+</mapper>
+

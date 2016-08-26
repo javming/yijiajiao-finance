@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IBatchPayDetailDAO">
+	
+	<insert id="insertBatchPayDetail" parameterType="com.yijiajiao.finance.bean.BatchPayDetail" useGeneratedKeys="true">
+		insert into batch_pay_detail(teacher_name,phone_num,start_time,end_time,running_no,proceeds_account,proceeds_name,proceeds_fee,remark,open_id,batch_no,proceeds_time) 
+		values(#{teacher_name},#{phone_num},#{start_time},#{end_time},#{running_no},#{proceeds_account},#{proceeds_name},#{proceeds_fee},#{remark},#{open_id},#{batch_no},#{proceeds_time});
+	</insert>
+	<update id="updateNumber" parameterType="com.yijiajiao.finance.bean.BatchPayDetail">
+		update batch_pay_detail set running_no=#{running_no} and batch_no=#{batch_no} where open_id=#{open_id} and start_time=#{start_time};
+	</update>
+	<update id="updateIsDispose" parameterType="String">
+		update batch_pay_detail set is_dispose=1,proceeds_time=now() where batch_no=#{batch_no}
+	</update>
+	<select id="queryByBatch_no" parameterType="String" resultType="com.yijiajiao.finance.bean.BatchPayDetail">
+		select * from batch_pay_detail where batch_no=#{batch_no};
+	</select>
+	<select id="getBatchPayDetailsByConditions" parameterType="com.yijiajiao.finance.bean.query.BatchPayDetailQuery" resultType="com.yijiajiao.finance.bean.BatchPayDetail">
+		select * from batch_pay_detail where start_time=#{queryDate} 
+		<if test="phone_num!=null"> and phone_num=#{phone_num}</if>
+		<if test="pageSize!=null and pageSize!='' and pageSize!=0">
+			limit #{startRow},#{pageSize}
+		</if>
+	</select>
+	<select id="getCountByConditions" parameterType="com.yijiajiao.finance.bean.query.BatchPayDetailQuery" resultType="int">
+		select count(*) from batch_pay_detail where is_dispose=#{is_dispose} and start_time=#{start_time};
+	</select>
+	
+	<select id="getCountByDateAndPhone" parameterType="com.yijiajiao.finance.bean.query.BatchPayDetailQuery" resultType="int">
+		select count(*) from batch_pay_detail where start_time=#{queryDate} 
+		<if test="phone_num!=null"> and phone_num=#{phone_num}</if>
+	</select>
+	<select id="getSumIncome" parameterType="com.yijiajiao.finance.bean.query.BatchPayDetailQuery" resultType="BigDecimal">
+		select sum(proceeds_fee) from batch_pay_detail where start_time=#{queryDate} 
+		<if test="phone_num!=null"> and phone_num=#{phone_num}</if>
+	</select>
+</mapper>

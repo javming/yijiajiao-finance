@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IWaresSlaveDAO">
+    
+    <resultMap type="com.yijiajiao.finance.bean.WaresSlave" id="resultWaresSlave">
+        <id column="id" property="id" />
+        <result property="waresId" column="wares_id" />
+        <result property="slaveId" column="slave_id" />
+        <result property="orderNumber" column="order_number"/>
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+        <result property="date121" column="date121" />
+        <result property="schedule" column="schedule" />
+        <result property="teachMode" column="teach_mode" />
+        <result property="curriculumInfo" column="curriculum_info" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="seq" column="seq" />
+    </resultMap>
+	
+	<select id="selectByOrderNumber" parameterType="String" resultMap="resultWaresSlave">
+		select * from t_wares_slave where order_number=#{orderNumber}
+	</select>
+	<insert id="insertWaresSlave" parameterType="com.yijiajiao.finance.bean.WaresSlave" useGeneratedKeys="true" keyProperty="id">
+		insert into t_wares_slave(wares_id,slave_id,order_number,start_time,end_time,date121,schedule
+		,teach_mode,curriculum_info,create_time,update_time,seq) values(#{waresId},#{slaveId},#{orderNumber},
+		#{startTime},#{endTime},#{date121},#{schedule},#{teachMode},#{curriculumInfo},#{createTime},#{updateTime},
+		#{seq})
+	</insert>
+
+
+</mapper>
+

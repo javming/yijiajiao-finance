@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IYidouAccountDAO">
+    
+    <resultMap type="com.yijiajiao.finance.bean.YidouAccount" id="resultYidouAccount">
+        <id column="id" property="id" />
+        <result property="openId" column="open_id" />
+        <result property="yidouCount" column="yidou_count" />
+        <result property="createTime" column="create_time"/>
+        <result property="lastUpdateTime" column="last_update_time" />
+    </resultMap>
+	
+	<select id="selectByOpenId" parameterType="String" resultMap="resultYidouAccount">
+		select * from yidou_account where open_id=#{openId}
+	</select>
+	<insert id="insertYidouAccount" parameterType="com.yijiajiao.finance.bean.YidouAccount" useGeneratedKeys="true" keyProperty="id">
+		insert into yidou_account(open_id,yidou_count,create_time,last_update_time) values(#{openId},#{yidouCount},#{createTime},
+		#{lastUpdateTime});
+	</insert>
+	<update id="updateYidouAccount" parameterType="com.yijiajiao.finance.bean.YidouAccount">
+		update yidou_account set yidou_count=#{yidouCount},last_update_time=#{lastUpdateTime} where open_id=#{openId}
+	</update>
+
+</mapper>
+

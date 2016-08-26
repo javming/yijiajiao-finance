@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="30 seconds"> 
+	<!-- 定义属性，可以使“${}”来使用变量 -->
+	<property name="APP_Name" value="myAppName" />
+	<!-- 获取时间戳字符串 -->
+	<timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" />
+	<!-- 每个logger都关联到logger上下文，默认上下文名称为“default”。 -->
+	<!-- 但可以使用该标签设置成其他名字，用于区分不同应用程序的记录。一旦设置，不能修改。 -->
+	<contextName>${APP_Name}</contextName>
+	
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> 
+    <encoder>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread]%logger{80} - %m%n</pattern>
+    </encoder>
+  </appender>
+  
+  	<!-- 打印sql语句 -->
+	<logger name="com.ibatis" level="DEBUG" />  
+	<logger name="com.ibatis.common.jdbc.SimpleDataSource" level="DEBUG" />  
+	<logger name="com.ibatis.common.jdbc.ScriptRunner" level="DEBUG" />  
+	<logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" />  
+	<logger name="java.sql.Connection" level="DEBUG" />  
+	<logger name="java.sql.Statement" level="DEBUG" />  
+	<logger name="java.sql.PreparedStatement" level="DEBUG" />
+	
+	 	<!-- 写入日志文件 -->
+<!-- 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">   
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">   
+		  <fileNamePattern>logs/%d{yyyy-MM-dd}.log</fileNamePattern>   
+		  <maxHistory>30</maxHistory>    
+		</rollingPolicy>   
+		  
+		<encoder>   
+		  <pattern>%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread] %-5level %logger{35} - %m%n</pattern>   
+		</encoder>   
+	</appender>    
+	   
+	  <root level="DEBUG">   
+		<appender-ref ref="FILE" />   
+	  </root> -->
+	<root level="info">
+	  <appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>

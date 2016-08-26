@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IMoneyTimerDAO">
+    
+    <resultMap type="com.yijiajiao.finance.bean.MoneyTimer" id="resultMoneyTimer">
+        <id column="id" property="id" />
+        <result property="openId" column="open_id" />
+        <result property="variableMoney" column="variable_money" />
+        <result property="withdrawalCash" column="withdrawal_cash"/>
+        <result property="totalMoney" column="total_money" />
+        <result property="totalSettleMoney" column="total_settle_money"/>
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+    
+    <select id="queryMoneyTimerByOpenId" parameterType="String" resultMap="resultMoneyTimer">
+        select * from money_timer where open_id=#{openId};
+    </select>
+    <insert id="saveMoneyTimer" parameterType="com.yijiajiao.finance.bean.MoneyTimer" useGeneratedKeys="true">
+    	insert into money_timer(open_id,variable_money,withdrawal_cash,total_money,total_settle_money,update_time) 
+    	values(#{openId},#{variableMoney},#{withdrawalCash},#{totalMoney},#{totalSettleMoney},#{updateTime});
+    </insert>
+    <update id="updateMoneyTimer" parameterType="com.yijiajiao.finance.bean.MoneyTimer">
+    	update money_timer set variable_money=#{variableMoney},withdrawal_cash=#{withdrawalCash},
+    	total_money=#{totalMoney},total_settle_money=#{totalSettleMoney},update_time=#{updateTime} where open_id=#{openId};
+    </update>
+    <select id="queryAllOpenIds" resultType="String">
+    	select open_id from money_timer;
+    </select>
+   
+</mapper>
+

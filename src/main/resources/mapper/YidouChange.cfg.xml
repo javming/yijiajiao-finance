@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yijiajiao.finance.dao.IYidouChangeDAO">
+	<resultMap type="com.yijiajiao.finance.bean.YidouChange" id="resultYidouChange">
+		<id property="id" column="id"/>
+		<result property="openId" column="open_id"/>
+		<result property="yidouChange" column="yidou_change"/>
+		<result property="isCharge" column="is_charge"/>
+		<result property="chargeType" column="charge_type"/>
+		<result property="resourceSpend" column="resource_spend"/>
+		<result property="changeTime" column="change_time"/>
+	</resultMap>
+
+	<insert id="insertYidouChange" parameterType="com.yijiajiao.finance.bean.YidouChange">
+		insert into yidou_change(open_id,yidou_change,is_charge,charge_type,resource_spend,change_time) 
+		values(#{openId},#{yidouChange},#{isCharge},#{chargeType},#{resourceSpend},#{changeTime});
+	</insert>
+</mapper>

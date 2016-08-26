@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IDailySettleAccountsDAO">
+    
+    <resultMap type="com.yijiajiao.finance.bean.DailySettleAccounts" id="resultDailySettleAccounts">
+        <id column="id" property="id" />
+        <result property="openId" column="open_id" />
+        <result property="sellOpenId" column="sell_open_id" />
+        <result property="orderNumber" column="order_number"/>
+        <result property="commodityId" column="commodity_id"/>
+        <result property="curriculumType" column="curriculum_type" />
+        <result property="curriculumName" column="curriculum_name"/>
+        <result property="curriculumInfo" column="curriculum_info" />
+        <result property="slaveId" column="slave_id" />
+		<result property="settleMoney" column="settle_money"/>
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+        <result property="saveTime" column="save_time" />
+    </resultMap>
+	
+	<insert id="insertDailySettleAccounts" parameterType="com.yijiajiao.finance.bean.DailySettleAccounts" useGeneratedKeys="true" keyProperty="id">
+		insert into daily_settle_accounts(open_id,sell_open_id,order_number,commodity_id,curriculum_type,curriculum_name,curriculum_info,slave_id,settle_money,
+		start_time,end_time,save_time) values(#{openId},#{sellOpenId},#{orderNumber},#{commodityId},#{curriculumType},#{curriculumName},#{curriculumInfo},
+		#{slaveId},#{settleMoney},#{startTime},#{endTime},#{saveTime})
+	</insert>
+	<select id="queryTeacherIncomeForLastMonth" parameterType="String" resultType="BigDecimal">
+		select sum(settle_money) from daily_settle_accounts where  sell_open_id=#{openId} and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(end_time, '%Y%m' ) ) =1;
+	</select>
+	
+	<select id="queryTeacherIncomeForThisMonth" parameterType="String" resultType="BigDecimal">
+		select sum(settle_money) from daily_settle_accounts where  sell_open_id=#{openId} and month(now())=month(end_time);
+	</select>
+	
+	<select id="queryTeacherIncomeByMonth" parameterType="com.yijiajiao.finance.bean.query.QueryParam" resultType="BigDecimal">
+		select sum(settle_money) from daily_settle_accounts where  sell_open_id=#{oepnId} and month(#{date})=month(end_time)
+	</select>
+	<select id="queryInfoForCheckSame" parameterType="com.yijiajiao.finance.bean.DailySettleAccounts" resultType="int">
+		select count(*) from daily_settle_accounts where order_number=#{orderNumber} and slave_id=#{slaveId}
+	</select>
+</mapper>
+

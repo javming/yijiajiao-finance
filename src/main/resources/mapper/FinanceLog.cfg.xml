@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IFinanceLogDAO">
+    
+    <!-- 为了返回list 类型而定义的returnMap -->
+    <resultMap type="com.yijiajiao.finance.bean.FinanceLog" id="resultFinanceLog">
+        <id property="id" column="id" />
+        <result property="openId" column="open_id" />
+        <result property="sellOpenId" column="sell_openid" />
+        <result property="teacherPhoneNum" column="teacher_phonenum"/>
+        <result property="studentPhoneNum" column="student_phonenum"/>
+        <result property="tradeTime" column="trade_time" />
+        <result property="orderNumber" column="order_number"/>
+        <result property="trade_no" column="trade_no"/>
+        <result property="commodityId" column="commodity_id"/>
+        <result property="commodityType" column="commodity_type"/>
+        <result property="curriculumName" column="curriculum_name"/>
+        <result property="curriculumInfo" column="curriculum_info"/>
+        <result property="curriculumType" column="curriculum_type"/>
+        <result property="teachMode" column="teach_mode"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="tradeType" column="trade_type"/>
+        <result property="accountNumber" column="account_number"/>
+        <result property="duration" column="time_change"/>
+        <result property="solutionId" column="solution_id"/>
+        <result property="teacherIncome" column="teacher_income"/>
+		<result property="systemIncome" column="system_income"/>
+		<result property="variableMoneyChange" column="variable_money_change"/>
+		<result property="withdrawalCashChange" column="withdrawal_cash_change"/>
+		<result property="teacherOutput" column="teacher_output"/>
+		<result property="financeLogsType" column="finance_logs_type"/>
+		<result property="openIdIsdel" column="openid_isdel"/>
+		<result property="sellOpenIdIsdel" column="sell_openid_isdel"/>
+    </resultMap>
+    
+    <insert id="saveFinanceLog" parameterType="com.yijiajiao.finance.bean.FinanceLog" useGeneratedKeys="true" keyProperty="id">
+    	insert into finance_log(open_id,sell_openid,teacher_phonenum,student_phonenum,trade_time,order_number,trade_no,commodity_id,commodity_type,curriculum_name,curriculum_info,curriculum_type,
+    	teach_mode,total_price,trade_type,account_number,time_change,solution_id,teacher_income,system_income,variable_money_change,withdrawal_cash_change,
+    	teacher_output,finance_logs_type,openid_isdel,sell_openid_isdel,curriculum_count) values(#{openId},#{sellOpenId},#{teacherPhoneNum},#{studentPhoneNum},#{tradeTime},#{orderNumber},#{trade_no},#{commodityId},
+    	#{commodityType},#{curriculumName},#{curriculumInfo},#{curriculumType},#{teachMode},#{totalPrice},#{tradeType},#{accountNumber},#{duration},
+    	#{solutionId},#{teacherIncome},#{systemIncome},#{variableMoneyChange},#{withdrawalCashChange},#{teacherOutput},#{financeLogsType},#{openIdIsdel},#{sellOpenIdIsdel},#{curriculumCount})
+    </insert>
+
+    <select id="queryFinanceLogsByOpenId" parameterType="String" resultMap="resultFinanceLog">
+    	select * from finance_log  where open_id=#{openId};
+    </select>
+    <select id="queryFinanceLogByOrderNum" parameterType="String" resultMap="resultFinanceLog">
+    	select * from finance_log where openid_isdel=0 and sell_openid_isdel=0 and finance_logs_type=1 and order_number=#{orderNumber};
+    </select>
+    <select id="queryFinanceLogByConditions" parameterType="com.yijiajiao.finance.bean.FinanceLog" resultMap="resultFinanceLog">
+    	select * from finance_log where openid_isdel=0 and sell_openid_isdel=0 and finance_logs_type=#{financeLogsType}
+    	<if test="openId != null"> and open_id=#{openId}</if><if test="sellOpenId != null"> and sell_openid=#{sellOpenId}</if>
+    	<if test="orderNumber != null">and order_number=#{orderNumber}</if><if test="commodityId != null">and commodity_id=#{commodityId}</if>
+    </select>
+    <select id="queryFinanceLogsByConditions" parameterType="com.yijiajiao.finance.bean.query.FinanceLogQuery" resultMap="resultFinanceLog">
+    	select * from finance_log where openid_isdel=0 and sell_openid_isdel=0 and month(trade_time)=#{month}
+    	<if test="openId != null"> and open_id=#{openId}</if><if test="sellOpenId != null"> and sell_openid=#{sellOpenId}</if>
+    	<if test="orderNumber != null">and order_number=#{orderNumber}</if><if test="commodityId != null">and commodity_id=#{orderNumber}</if>
+    	<if test="financeLogsType != null">and finance_logs_type=#{financeLogsType}</if>
+    	<if test="size >0"> limit #{begin},#{size}</if>
+    </select>
+    <select id="queryTeacherTradeLogs" parameterType="com.yijiajiao.finance.bean.query.FinanceLogQuery" resultMap="resultFinanceLog">
+    	select * from finance_log where sell_openid_isdel=0 and finance_logs_type in (1,2) and sell_openid=#{openId}
+    	<if test="startTime!=null">and   trade_time&gt;=#{startTime}</if><if test="endTime !=null">and trade_time&lt;=#{endTime}</if>
+    	order by trade_time desc;
+    </select>
+    
+    <select id="queryCount" parameterType="com.yijiajiao.finance.bean.query.FinanceLogQuery" resultMap="resultFinanceLog">
+    	select count(*) from finance_log where openid_isdel=0 and sell_openid_isdel=0 and month(trade_time)=#{month}
+    	<if test="openId != null"> and open_id=#{openId}</if><if test="sellOpenId != null"> and sell_openid=#{sellOpenId}</if>
+    	<if test="orderNumber != null">and order_number=#{orderNumber}</if><if test="commodityId != null">and commodity_id=#{orderNumber}</if>
+    	<if test="financeLogsType != null">and finance_logs_type=#{financeLogsType}</if>
+    	<if test="size >0"> limit #{begin},#{size}</if>
+    </select>
+   <!--  查询上个月数据 -->
+    <select id="queryTeacherIncomeForLastMonth" parameterType="String" resultType="BigDecimal">
+    	select sum(withdrawal_cash_change) from finance_log where  sell_openid=#{openId} and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(trade_time, '%Y%m' ) ) =1;
+    </select>
+    <select id="queryTeacherIncomeForThisMonth" parameterType="String" resultType="BigDecimal">
+    	select sum(withdrawal_cash_change) from finance_log where  sell_openid=#{openId} and month(now())=month(trade_time);
+    </select>
+    <select id="queryTeacherIncomeByMonth" parameterType="com.yijiajiao.finance.bean.query.QueryParam" resultType="BigDecimal">
+    	select sum(withdrawal_cash_change) from finance_log where  sell_openid=#{openId} and month(#{date})=month(trade_time);
+    </select>
+<!--     <cache eviction="FIFO" flushInterval="600000" size="1024" readOnly="true" /> -->
+</mapper>
+

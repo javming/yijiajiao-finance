@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IBatchPaymentDAO">
+	<resultMap type="com.yijiajiao.finance.bean.BatchPayment" id="resultBatchPayment">
+		<id property="id" column="id"/>
+		<result property="email" column="email"/>
+		<result property="batch_no" column="batch_no"/>
+		<result property="batch_num" column="batch_num"/>
+		<result property="batch_fee" column="batch_fee"/>
+		<result property="pay_date" column="pay_date"/>
+		<result property="notify_time" column="notify_time"/>
+		<result property="notify_type" column="notify_type"/>
+		<result property="notify_id" column="notify_id"/>
+		<result property="pay_user_id" column="pay_user_id"/>
+		<result property="pay_user_name" column="pay_user_name"/>
+		<result property="pay_account_no" column="pay_account_no"/>
+		<result property="is_dispose" column="is_dispose"/>
+		<result property="success_details" column="success_details"/>
+		<result property="fail_details" column="fail_details"/>
+	</resultMap>
+	
+	<insert id="insertBatchPayment" parameterType="com.yijiajiao.finance.bean.BatchPayment" useGeneratedKeys="true">
+		insert into batch_payment(batch_no,email,batch_num,batch_fee,pay_date,notify_time,notify_type,notify_id,pay_user_id,pay_user_name,
+		pay_account_no,is_dispose,success_details,fail_details) 
+		values(#{batch_no},#{email},#{batch_num},#{batch_fee},#{pay_date},#{notify_time},#{notify_type},#{notify_id},#{pay_user_id},#{pay_user_name},
+		#{pay_account_no},#{is_dispose},#{success_details},#{fail_details});
+	</insert>
+	<update id="updateBatchPayment" parameterType="com.yijiajiao.finance.bean.BatchPayment" >
+		update batch_payment set batch_no=#{batch_no},email=#{email},batch_num=#{batch_num},batch_fee=#{batch_fee},pay_date=#{pay_date},notify_time=#{notify_time},
+		notify_type=#{notify_type},notify_id=#{notify_id},pay_user_id=#{pay_user_id},pay_user_name=#{pay_user_name},pay_account_no=#{pay_account_no},
+		is_dispose=#{is_dispose},success_details=#{success_details},fail_details=#{fail_details} where id=#{id};
+	</update>
+	<select id="selectBatchPaymentByBatch_no" parameterType="String" resultMap="resultBatchPayment">
+		select * from batch_payment where batch_no=#{batch_no};
+	</select>
+
+</mapper>

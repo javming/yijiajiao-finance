@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yijiajiao.finance.dao.IUserAlipayDAO">
+
+    <insert id="insertUserAlipay" parameterType="com.yijiajiao.finance.bean.UserAlipay" useGeneratedKeys="true">
+    	insert into user_alipay(open_id,alipay_account,alipay_name,create_time) 
+    	values(#{open_id},#{alipay_account},#{alipay_name},#{create_time});
+    </insert>
+   <select id="queryUserAlipayByOpenId" parameterType="String" resultType="com.yijiajiao.finance.bean.UserAlipay">
+   		select * from user_alipay where open_id=#{open_id} and is_del=0;
+   </select>
+   <select id="queryUserAlipayByOpenIds" parameterType="String" resultType="com.yijiajiao.finance.bean.UserAlipay">
+   		select * from user_alipay where is_del=0 and open_id in 
+   		<foreach collection="list" item="open_id" index="index" open="(" close=")" separator=",">
+   			#{open_id}
+   		</foreach>
+   </select>
+   <update id="updateUserAlipay" parameterType="com.yijiajiao.finance.bean.UserAlipay">
+   		update user_alipay set alipay_account=#{alipay_account},alipay_name=#{alipay_name},create_time=#{create_time} where
+   		open_id=#{open_id}
+   </update>
+   <update id="deleteUserAlipay" parameterType="String">
+   		update user_alipay set is_del=1 where open_id=#{open_id};
+   </update>
+</mapper>
